@@ -31,3 +31,9 @@ module "2012r2-sft-cloud-account-enroll" {
   role     = "cloud-account-enroll"
   userdata = ["${data.template_file.sftd-init-solo.rendered}"]
 }
+
+module "2016-sft-cloud-account-enroll" {
+  source   = "./2016"
+  role     = "cloud-account-enroll"
+  userdata = ["${data.template_file.sftd-init-solo.rendered}"]
+}
