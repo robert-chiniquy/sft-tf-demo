@@ -36,12 +36,12 @@ resource "aws_security_group" "default" {
   }
 
   # RDP - Can remove this if going 100% ScaleFT-managed
-  # ingress {
-  #   from_port   = 3389
-  #   to_port     = 3389
-  #   protocol    = "TCP"
-  #   cidr_blocks = [""] # Your office/home subnets here
-  # }
+  ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"] # Your office/home subnets here
+  }
 
   # NTP
   egress {

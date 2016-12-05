@@ -21,7 +21,7 @@ resource "aws_instance" "demo-2012r2-sft" {
   key_name               = "demo-2012r2-sft-deployer-key"
 
   tags = {
-    Name = "demo-2012r2-sft-${var.role}"
+    Name = "aws-demo-${var.role}"
   }
 
   lifecycle {

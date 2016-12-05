@@ -18,22 +18,50 @@ resource "aws_key_pair" "sftwindeployer" {
   public_key = "${file("${var.aws_key_path}")}"
 }
 
+
+// Windows node
 data "template_file" "sftd-init-solo" {
-  template = "${file("${path.module}/install-sftd.ps1")}"
+  template = "${file("${path.module}/install-sftd-with-token-and-altname.ps1")}"
 
   vars {
-    altname = "solo-sft-win"
+    altname = "aws-windows-demo"
   }
 }
 
 module "2012r2-sft-cloud-account-enroll" {
   source   = "./2012r2"
-  role     = "cloud-account-enroll"
+  role     = "windows-node"
   userdata = ["${data.template_file.sftd-init-solo.rendered}"]
 }
 
-module "2016-sft-cloud-account-enroll" {
-  source   = "./2016"
-  role     = "cloud-account-enroll"
-  userdata = ["${data.template_file.sftd-init-solo.rendered}"]
+
+// Ubuntu node
+data "template_file" "sftd-ubuntu-node" {
+  template = "${file("${path.module}/install-sftd-with-token-and-altname.sh")}"
+
+  vars {
+    altname = "aws-ubuntu"
+  }
+}
+
+module "ubuntu-node" {
+  source = "./ubuntu"
+  tagname = "ubuntu-node"
+  userdata = "${data.template_file.sftd-ubuntu-node.rendered}"
+}
+
+
+// Ubuntu bastion
+data "template_file" "sftd-ubuntu-bastion" {
+  template = "${file("${path.module}/install-sftd-with-token-and-altname.sh")}"
+
+  vars {
+    altname = "aws-bastion"
+  }
+}
+
+module "ubuntu-bastion" {
+  source = "./ubuntu"
+  tagname = "ubuntu-bastion"
+  userdata = "${data.template_file.sftd-ubuntu-bastion.rendered}"
 }
